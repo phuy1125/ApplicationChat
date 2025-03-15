@@ -150,3 +150,4 @@ C:\Users\Project ca nhan\ChatApplication\ChatApplication\obj\Debug\net8.0\refint
 C:\Users\Project ca nhan\ChatApplication\ChatApplication\obj\Debug\net8.0\ChatApplication.pdb
 C:\Users\Project ca nhan\ChatApplication\ChatApplication\obj\Debug\net8.0\ChatApplication.genruntimeconfig.cache
 C:\Users\Project ca nhan\ChatApplication\ChatApplication\obj\Debug\net8.0\ref\ChatApplication.dll
+C:\Users\Project ca nhan\ChatApplication\ChatApplication\obj\Debug\net8.0\ChatApplication.sourcelink.json

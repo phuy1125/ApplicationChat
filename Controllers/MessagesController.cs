@@ -14,7 +14,7 @@ namespace ChatApplication.Controllers
         public async Task<IActionResult> Index()
         {
             var users = await _messageService.GetUsers();
-            return View();
+            return View(users);
         }
         public async Task<IActionResult> Chat(string selectedUserId)
         {
