@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Project ca nhan\\ChatApplication\\ChatApplication\\ChatApplication.csproj": {}
+    "C:\\project ca nhan\\ApplicationChat\\ChatApplication.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Project ca nhan\\ChatApplication\\ChatApplication\\ChatApplication.csproj": {
+    "C:\\project ca nhan\\ApplicationChat\\ChatApplication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Project ca nhan\\ChatApplication\\ChatApplication\\ChatApplication.csproj",
+        "projectUniqueName": "C:\\project ca nhan\\ApplicationChat\\ChatApplication.csproj",
         "projectName": "ChatApplication",
-        "projectPath": "C:\\Users\\Project ca nhan\\ChatApplication\\ChatApplication\\ChatApplication.csproj",
-        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Project ca nhan\\ChatApplication\\ChatApplication\\obj\\",
+        "projectPath": "C:\\project ca nhan\\ApplicationChat\\ChatApplication.csproj",
+        "packagesPath": "C:\\Users\\NK\\.nuget\\packages\\",
+        "outputPath": "C:\\project ca nhan\\ApplicationChat\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\NK\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -86,7 +86,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.406/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.407/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

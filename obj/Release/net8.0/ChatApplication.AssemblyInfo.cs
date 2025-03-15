@@ -11,10 +11,9 @@
 using System;
 using System.Reflection;
 
-[assembly: Microsoft.AspNetCore.Identity.UI.UIFrameworkAttribute("Bootstrap5")]
 [assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("aspnet-ChatApplication-1f0d90a9-6f02-4a83-b7b2-b56e84cf06d3")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("ChatApplication")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+99bcc62ca71578704e678e9339ed46731839137f")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChatApplication")]

@@ -30,7 +30,7 @@ namespace ChatApplication.Service
             {
                 CurrentUserId = currentUserId,
                 ReceiverId = selectedUserId,
-                ReceiverUserName = selectedName
+                ReceiverUserName = selectedName,
             };
             var messages = await _context.Messages
                 .Where(i => (i.SenderId == currentUserId || i.SenderId == selectedUserId)

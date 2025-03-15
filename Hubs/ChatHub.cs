@@ -37,7 +37,7 @@ namespace ChatApplication.Hubs
             {
                 receiverId,senderId
             };
-            await Clients.Users(users).SendAsync("ReceiverMessage", message, date, time, senderId);
+            await Clients.Users(users).SendAsync("ReceiveMessage", message, date, time, senderId);  
 
         }
     }

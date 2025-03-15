@@ -1,5 +1,6 @@
 ﻿@using ChatApplication.ViewModels.MessagesViewModels
 @model ChatViewModel
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
 
 <div class="message-warp">
 	<div class="receiver-info">
@@ -149,48 +150,140 @@
 </style>
 
     <script>
-        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+        // var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-        connection.start().then(function(){
-            console.log("Connected")
-        }).catch(function(err){
-            console.error(err.toString());
-        });
+        // connection.start().then(function(){
+        //     console.log("Connected")
+        // }).catch(function(err){
+        //     console.error(err.toString());
+        // });
 
-        $(".send-btn").click(function(){
-            var receiverId ="@Model.ReceiverId";
-            var message=$(".message-field").val();
+        // $(".send-btn").click(function(){
+        //     var receiverId ="@Model.ReceiverId";
+        //     var message=$(".message-field").val();
 
-            connection.invoke("SendMessage",receiverId, message);
-            $(".message-field").val("").focus();
-        })
+        //     connection.invoke("SendMessage",receiverId, message);
+        //     $(".message-field").val("").focus();
+        // })
 
 
         // Append messages in real-time when any user sends a message to the current user
-        connection.on("ReceiveMessage", function (message, date, time, senderId) { 
-            var message=``;
+        // connection.on("ReceiveMessage", function (message, date, time, senderId) { 
+        //     var message=``;
 
-            if (senderId == "@Model.CurrentUserId") { 
-                message = `
+        //     if (senderId == "@Model.CurrentUserId") { 
+        //         message = `
+        //             <div class="message sent-message">
+        //                 <p>${message}</p> 
+        //                 <span>${time}</span>
+        //             </div>
+        //         `;
+        //     } else { 
+        //         message = `
+        //             <div class="message received-message">
+        //                 <p>${message}</p> 
+        //                 <span>${time}</span>
+        //             </div>
+        //         `;
+        //     }
+
+        //     $(".messages-box").append(message);
+        //     $(".messages-box").scrollTop($(".messages-box")[0].scrollHeight);
+        // });
+
+        // $(function(){
+        //     $(".messages-box").scrollTop($(".messages-box")[0].scrollHeight);
+        // });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Kiểm tra nếu SignalR đã được tải
+        if (typeof signalR === "undefined") {
+            console.error("SignalR chưa được tải. Kiểm tra đường dẫn thư viện.");
+            return;
+        }
+
+        // Tạo kết nối SignalR
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub") // Kiểm tra đúng URL của Hub
+            .withAutomaticReconnect()
+            .build();
+
+        // Kết nối tới server
+        connection.start()
+            .then(function () {
+                console.log("✅ SignalR kết nối thành công!");
+            })
+            .catch(function (err) {
+                console.error("❌ Lỗi kết nối SignalR:", err);
+            });
+
+        // Lấy phần tử giao diện
+        const sendButton = document.querySelector(".send-btn");
+        const messageField = document.querySelector(".message-field");
+        const messagesBox = document.querySelector(".messages-box");
+
+        // Hàm tự động cuộn xuống cuối tin nhắn
+        function scrollToBottom() {
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+        }
+
+        // Gửi tin nhắn khi bấm nút gửi
+        sendButton.addEventListener("click", function () {
+            var receiverId = "@Model.ReceiverId";
+            var messageText = messageField.value.trim();
+
+            if (!messageText) {
+                console.warn("⚠ Tin nhắn không được để trống!");
+                return;
+            }
+
+            if (connection.state !== "Connected") {
+                console.warn("⚠ SignalR chưa kết nối, không thể gửi tin nhắn.");
+                return;
+            }
+
+            connection.invoke("SendMessage", receiverId, messageText)
+                .then(() => {
+                    console.log("📩 Tin nhắn đã được gửi!");
+                })
+                .catch(function (err) {
+                    console.error("❌ Lỗi khi gửi tin nhắn:", err);
+                });
+
+            // Xóa nội dung ô nhập sau khi gửi
+            messageField.value = "";
+            messageField.focus();
+            setTimeout(scrollToBottom, 100); // Đợi 100ms để cuộn xuống
+        });
+
+        // Nhận tin nhắn từ server
+        connection.on("ReceiveMessage", function (receivedMessage, date, time, senderId) {
+            let messageHtml = ``;
+
+            if (senderId === "@Model.CurrentUserId") {
+                // Tin nhắn của chính người gửi
+                messageHtml = `
                     <div class="message sent-message">
-                        <p>${message}</p> 
+                        <p>${receivedMessage}</p>
                         <span>${time}</span>
                     </div>
                 `;
-            } else { 
-                message = `
+            } else {
+                // Tin nhắn từ người nhận
+                messageHtml = `
                     <div class="message received-message">
-                        <p>${message}</p> 
+                        <p>${receivedMessage}</p>
                         <span>${time}</span>
                     </div>
                 `;
             }
 
-            $(".messages-box").append(message);
-            $(".messages-box").scrollTop($(".messages-box")[0].scrollHeight);
+            messagesBox.innerHTML += messageHtml;
+            scrollToBottom();
         });
 
-        $(function(){
-            $(".messages-box").scrollTop($(".messages-box")[0].scrollHeight);
-        });
+        // Tự động cuộn xuống cuối khi tải trang
+        scrollToBottom();
+    });
+
     </script>
