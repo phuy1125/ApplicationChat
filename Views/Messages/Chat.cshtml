@@ -1,5 +1,196 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@using ChatApplication.ViewModels.MessagesViewModels
+@model ChatViewModel
+
+<div class="message-warp">
+	<div class="receiver-info">
+		<div class="first-letter">
+			@Model.ReceiverUserName.Substring(0,1).ToUpper()
+		</div>
+		<h3>@Model.ReceiverUserName</h3>
+	</div>
+	<div class="messages-box">
+		@foreach(var item in Model.Messages)
+		{
+			if (item.IsCurrentUserSentMessage)//currrent user message
+			{
+				<div class="message sent-message">
+					<p>@item.Text</p>
+					<span>@item.Date @item.Time</span>
+				</div>
+			}
+			else{
+				//receiver message
+				<div class="message received-message">
+					<p>@item.Text</p>
+					<span>@item.Date @item.Time</span>
+				</div>
+			}
+		}
+	</div>
+	<div class="send-message-box">
+            <textarea rows="4" class="message-field" placeholder="Type your message"></textarea>
+
+			<button class="send-btn btn btn-dark">Send</button>
+	</div>
+</div>
+<style>
+    /* Container chính */
+.message-warp {
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    max-width: 600px;
+    margin: auto;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
 }
+
+/* Phần hiển thị thông tin người nhận */
+.receiver-info {
+    display: flex;
+    align-items: center;
+    background-color: #e6e6e6;
+    padding: 15px;
+    border-bottom: 2px solid #ccc;
+}
+
+.first-letter {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: darkblue;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+/* Hộp tin nhắn */
+.messages-box {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    height: 65vh;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+/* Tin nhắn chung */
+.message {
+    padding: 10px 15px;
+    border-radius: 15px;
+    max-width: 75%;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+}
+
+/* Tin nhắn của người gửi */
+.sent-message {
+    background-color: darkblue;
+    color: white;
+    align-self: flex-end;
+}
+
+/* Tin nhắn của người nhận */
+.received-message {
+    background-color: darkred;
+    color: white;
+    align-self: flex-start;
+}
+
+/* Thời gian tin nhắn */
+.message span {
+    font-size: 12px;
+    color: #ddd;
+    display: block;
+    margin-top: 5px;
+    text-align: right;
+}
+
+/* Hộp nhập tin nhắn */
+.send-message-box {
+    display: flex;
+    padding: 10px;
+    background-color: #e6e6e6;
+    border-top: 2px solid #ccc;
+}
+
+/* Ô nhập tin nhắn */
+.message-field {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+    outline: none;
+    font-size: 14px;
+}
+
+/* Nút gửi tin nhắn */
+.send-btn {
+    background-color: darkblue;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.send-btn:hover {
+    background-color: navy;
+}
+
+
+</style>
+
+    <script>
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+        connection.start().then(function(){
+            console.log("Connected")
+        }).catch(function(err){
+            console.error(err.toString());
+        });
+
+        $(".send-btn").click(function(){
+            var receiverId ="@Model.ReceiverId";
+            var message=$(".message-field").val();
+
+            connection.invoke("SendMessage",receiverId, message);
+            $(".message-field").val("").focus();
+        })
+
+
+        // Append messages in real-time when any user sends a message to the current user
+        connection.on("ReceiveMessage", function (message, date, time, senderId) { 
+            var message=``;
+
+            if (senderId == "@Model.CurrentUserId") { 
+                message = `
+                    <div class="message sent-message">
+                        <p>${message}</p> 
+                        <span>${time}</span>
+                    </div>
+                `;
+            } else { 
+                message = `
+                    <div class="message received-message">
+                        <p>${message}</p> 
+                        <span>${time}</span>
+                    </div>
+                `;
+            }
+
+            $(".messages-box").append(message);
+            $(".messages-box").scrollTop($(".messages-box")[0].scrollHeight);
+        });
+
+        $(function(){
+            $(".messages-box").scrollTop($(".messages-box")[0].scrollHeight);
+        });
+    </script>
